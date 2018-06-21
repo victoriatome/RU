@@ -7,14 +7,14 @@
       <v-container fluid>
         <v-layout row wrap>
           <v-flex xs4 v-for="option in question.options" v-bind:key="option.id">
-            <v-checkbox class="answer" v-bind:label="option.label" v-bind:value="option.value" v-model="answer.selectedOptionValues"></v-checkbox>
+            <v-checkbox class="answer" v-bind:label="option.label" v-bind:value="option.value" v-model="selectedOptionValues"></v-checkbox>
           </v-flex>
         </v-layout>
       </v-container>
     </v-layout>
     <v-layout class="answer" v-show="question.type === 'RADIO' && open">
       <v-container fluid>
-        <v-radio-group v-model="answer.selectedOptionValue" :mandatory="false">
+        <v-radio-group v-model="selectedOptionValue" :mandatory="false">
           <v-layout row wrap>
               <v-flex xs4 v-for="option in question.options" v-bind:key="option.id">
                 <v-radio class="answer" :label="option.label" :value="option.value"></v-radio>
@@ -27,39 +27,48 @@
 </template>
 
 <style lang="scss" scoped>
-  .questions{
-
-    .answer{
-        margin-top: 10px;
-        margin-bottom: -20px;
-    }
+.questions {
+  .answer {
+    margin-top: 10px;
+    margin-bottom: -20px;
   }
+}
 </style>
 
 <script>
-
-  export default {
-    props: {
-      question: {
-        type: Object,
-        default: function () {
-          return { message: 'hello' }
-        }
+export default {
+  props: {
+    question: {
+      type: Object,
+      default: function() {
+        return { message: 'hello' };
       }
-    },
-    created(){
-    
-    },
-    data: () => ({
-      modal: false,
-      open: true,
-      answer: {
-        selectedOptionValue: '',
-        selectedOptionValues: [],
-      }
-    }),
-    methods: {
-      
     }
-  }
+  },
+  watch: {
+    selectedOptionValues: {
+      handler: function(val, old) {
+        if (val.length < old.length) {
+          this.$emit('remove', {
+            remove: old.filter(el => {
+              return !val.includes(el);
+            })
+          });
+        }
+        this.$emit('answer', {
+          answer: val
+        });
+      },
+      deep: true
+    }
+  },
+  created() {},
+  data: () => ({
+    modal: false,
+    open: true,
+    selectedOptionValue: '',
+    selectedOptionValues: []
+  }),
+  methods: {}
+};
 </script>

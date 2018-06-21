@@ -1,6 +1,6 @@
-export default class OptionService {
+export default class PollService {
     constructor(resource) {
-        this._resource = resource('option{/id}{?q,p}');
+        this._resource = resource('poll{/id}{?q,p}');
     }
 
     get(id) {
@@ -16,14 +16,14 @@ export default class OptionService {
         }).then(res => res.json());
     }
 
-    save(option) {
-        return this._resource.save(option);
+    save(poll) {
+        return this._resource.save(poll);
     }
 
-    edit(id, option) {
+    edit(id, poll) {
         return this._resource.update({
             id
-        }, option);
+        }, poll);
     }
 
     delete(id) {

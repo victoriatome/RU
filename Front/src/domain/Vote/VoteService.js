@@ -1,6 +1,6 @@
-export default class OptionService {
+export default class VoteService {
     constructor(resource) {
-        this._resource = resource('option{/id}{?q,p}');
+        this._resource = resource('vote{/id}{?q,p}');
     }
 
     get(id) {
@@ -16,14 +16,14 @@ export default class OptionService {
         }).then(res => res.json());
     }
 
-    save(option) {
-        return this._resource.save(option);
+    save(vote) {
+        return this._resource.save(vote);
     }
 
-    edit(id, option) {
+    edit(id, vote) {
         return this._resource.update({
             id
-        }, option);
+        }, vote);
     }
 
     delete(id) {

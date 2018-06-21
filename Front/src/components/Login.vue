@@ -41,48 +41,54 @@
 </template>
 
 <style lang="scss" scoped>
-  .login-form{
-    margin: 16px;
-    padding: 100px 0px;
+.login-form {
+  margin: 16px;
+  padding: 100px 0px;
 
-    .card{
-      padding: 16px 32px;
-    }
+  .card {
+    padding: 16px 32px;
   }
+}
 </style>
 
 <script>
-  import AuthService from '@/domain/Auth/AuthService'
+import AuthService from '@/domain/Auth/AuthService';
 
-  export default {
-    created(){
-      this.service = new AuthService(this.$resource);
-    },
-    data:() => ({
-      e1: true,
-      title: 'Pesquisa Restaurante Universitário',
-      password: '',
-      username: ''
-    }),
-    methods: {
-      entrar() {
-        if(this.username === 'offline'){
-          this.$cookie.set('token','táoff',{ expires: '1D' });
-          this.$router.push("Dashboard");
-          return;
-        }
-        this.service.authenticate(this.username, this.password).then(response => {
-          if (response.status == 200) {
-            this.$cookie.set('token',response.body.token,{ expires: '1D' });
-            this.$router.push("Dashboard");
-          }else {
-            alert('Tente novamente, credenciais inválidas.')
-          }
-        }, err => {
-          console.log(err)
-          alert(err.body.message);
-        })
+export default {
+  created() {
+    this.service = new AuthService(this.$resource);
+  },
+  data: () => ({
+    e1: true,
+    title: 'Pesquisa Restaurante Universitário',
+    password: '',
+    username: ''
+  }),
+  methods: {
+    entrar() {
+      if (this.username === 'offline') {
+        this.$cookie.set('token', 'táoff', { expires: '1D' });
+        this.$router.push('Dashboard');
+        return;
       }
+      this.service.authenticate(this.username, this.password).then(
+        response => {
+          if (response.status == 200) {
+            this.$cookie.set('token', response.body.token, { expires: '1D' });
+            this.$cookie.set('userId', response.body.user.id, {
+              expires: '1D'
+            });
+            this.$router.push('Dashboard');
+          } else {
+            alert('Tente novamente, credenciais inválidas.');
+          }
+        },
+        err => {
+          console.log(err);
+          alert(err.body.message);
+        }
+      );
     }
   }
+};
 </script>

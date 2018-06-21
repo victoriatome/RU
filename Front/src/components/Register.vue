@@ -54,61 +54,62 @@
 </template>
 
 <style lang="scss" scoped>
-  .login-form{
-    margin: 16px;
-    padding: 100px 0px;
+.login-form {
+  margin: 16px;
+  padding: 100px 0px;
 
-    .card{
-      padding: 16px 32px;
-    }
+  .card {
+    padding: 16px 32px;
   }
+}
 </style>
 
 <script>
+import UserService from '@/domain/User/UserService';
 
-  import UserService from '@/domain/User/UserService'
-
-  export default {
-    created(){
-      this.service = new UserService(this.$resource);
-    },
-    data:() => ({
-      e1: true,
-      rules:{
-        email: (value) => {
-          if(value !== ''){
-            const pattern = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-            return  pattern.test(value) || 'Email inválido'
-          }
-          return true
+export default {
+  created() {
+    this.service = new UserService(this.$resource);
+  },
+  data: () => ({
+    e1: true,
+    rules: {
+      email: value => {
+        if (value !== '') {
+          const pattern = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+          return pattern.test(value) || 'Email inválido';
         }
-      },
-      title: 'Pesquisa Restaurante Universitário',
-      user: {
-        password: '',
-        name: '',
-        email: '',
-        username: '',
-        actived: true,
-        displayName: name,
-        role: 'ADMINISTRATOR'
+        return true;
       }
-    }),
-    methods: {
-      cadastrar(){
-        this.service.save(this.user).then(response => {
+    },
+    title: 'Pesquisa Restaurante Universitário',
+    user: {
+      password: '',
+      name: '',
+      email: '',
+      username: '',
+      actived: true,
+      displayName: name,
+      role: 'ADMINISTRATOR'
+    }
+  }),
+  methods: {
+    cadastrar() {
+      this.service.save(this.user).then(
+        response => {
           if (response.status == 200) {
-            console.log(response)
-            this.$cookie.set('token',response.body.token,{ expires: '1D' });
-            this.$router.push("Dashboard");
-          }else {
-            alert('Tente novamente, credenciais inválidas.')
+            this.$cookie.set('token', response.body.token, { expires: '1D' });
+            this.$router.push('Dashboard');
+          } else {
+            alert('Tente novamente, credenciais inválidas.');
           }
-        }, err => {
-          console.log(err)
+        },
+        err => {
+          console.log(err);
           alert(err.body.message);
-        })
-      }
+        }
+      );
     }
   }
+};
 </script>
